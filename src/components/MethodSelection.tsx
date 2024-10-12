@@ -1,13 +1,14 @@
 import React from 'react';
 
 interface MethodSelectionProps {
-  selectedMethod: string; // Props untuk menerima metode yang dipilih
-  onSelectMethod: (method: string) => void;
+  selectedMethod: 'saw' | 'wp' | 'topsis' | 'ahp'; // Pastikan hanya metode yang valid
+  onSelectMethod: (method: 'saw' | 'wp' | 'topsis' | 'ahp') => void; // Pastikan hanya metode yang valid
 }
 
 const MethodSelection: React.FC<MethodSelectionProps> = ({ selectedMethod, onSelectMethod }) => {
   const handleMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onSelectMethod(e.target.value); // Memanggil callback saat metode berubah
+    const value = e.target.value as 'saw' | 'wp' | 'topsis' | 'ahp'; // Casting nilai ke jenis yang tepat
+    onSelectMethod(value); // Memanggil callback saat metode berubah
   };
 
   return (

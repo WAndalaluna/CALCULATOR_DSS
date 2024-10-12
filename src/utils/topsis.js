@@ -1,71 +1,114 @@
-// src/utils/topsis.js
-export const calculateTOPSIS = (alternatives, criteria, weights) => {
-    const normalizeMatrix = (matrix) => {
-        const squaredSum = criteria.map((_, index) =>
-            Math.sqrt(matrix.reduce((sum, row) => sum + row[index] ** 2, 0))
-        );
-        return matrix.map(row =>
-            row.map((value, index) => value / squaredSum[index])
-        );
-    };
+// utils/topsis.js
 
-    const weightedMatrix = (normalizedMatrix) => {
-        return normalizedMatrix.map(row => 
-            row.map((value, index) => value * weights[index])
-        );
-    };
+export function calculateTOPSIS(input) {
+    const { rows, cols, weights, types, values } = input;
 
-    const findIdealSolutions = (weightedMatrix, types) => {
-        const ideal = types.map((type, index) =>
-            type === 'benefit' 
-                ? Math.max(...weightedMatrix.map(row => row[index]))
-                : Math.min(...weightedMatrix.map(row => row[index]))
-        );
-        const negativeIdeal = types.map((type, index) =>
-            type === 'benefit' 
-                ? Math.min(...weightedMatrix.map(row => row[index]))
-                : Math.max(...weightedMatrix.map(row => row[index]))
-        );
-        return { ideal, negativeIdeal };
-    };
+    // Step 1: Input Data
+    const steps = [
+        {
+            title: "Input Data",
+            data: { rows, cols, weights, types, values },
+        },
+    ];
 
-    const calculateSeparationMeasures = (matrix, ideal, negativeIdeal) => {
-        const separationFromIdeal = matrix.map(row =>
-            Math.sqrt(row.reduce((sum, value, index) => sum + (value - ideal[index]) ** 2, 0))
-        );
-        const separationFromNegativeIdeal = matrix.map(row =>
-            Math.sqrt(row.reduce((sum, value, index) => sum + (value - negativeIdeal[index]) ** 2, 0))
-        );
-        return { separationFromIdeal, separationFromNegativeIdeal };
-    };
+    // Step 2: Normalisasi Bobot
+    const normalizedWeights = normalizeWeights(weights);
+    steps.push({
+        title: "Normalized Weights",
+        data: normalizedWeights,
+    });
 
-    const normalizedMatrix = normalizeMatrix(alternatives);
-    const weightedMatrixResult = weightedMatrix(normalizedMatrix);
-    const { ideal, negativeIdeal } = findIdealSolutions(weightedMatrixResult, criteria.types);
-    const { separationFromIdeal, separationFromNegativeIdeal } = calculateSeparationMeasures(weightedMatrixResult, ideal, negativeIdeal);
+    // Step 3: Normalisasi Matriks Keputusan
+    const normalizedDecisionMatrix = normalizeDecisionMatrix(values);
+    steps.push({
+        title: "Normalized Decision Matrix",
+        data: normalizedDecisionMatrix,
+    });
 
-    const relativeCloseness = separationFromNegativeIdeal.map((negative, index) => 
-        negative / (negative + separationFromIdeal[index])
-    );
+    // Step 4: Matriks Keputusan Ternormalisasi dengan Bobot
+    const weightedDecisionMatrix = applyWeights(normalizedDecisionMatrix, normalizedWeights);
+    steps.push({
+        title: "Weighted Decision Matrix",
+        data: weightedDecisionMatrix,
+    });
 
-    const finalRank = relativeCloseness
-        .map((value, index) => ({ alternatif: index + 1, value }))
-        .sort((a, b) => b.value - a.value);
+    // Step 5: Hitung Solusi Ideal Positif dan Negatif
+    const { idealPositive, idealNegative } = calculateIdealSolutions(weightedDecisionMatrix, types);
+    steps.push({
+        title: "Ideal Solutions",
+        data: { idealPositive, idealNegative },
+    });
+
+    // Step 6: Hitung Jarak ke Solusi Ideal Positif dan Negatif
+    const distances = calculateDistances(weightedDecisionMatrix, idealPositive, idealNegative);
+    steps.push({
+        title: "Distances to Ideal Solutions",
+        data: distances,
+    });
+
+    // Step 7: Hitung Nilai Preferensi (C)
+    const preferenceValues = calculatePreferenceValues(distances);
+    steps.push({
+        title: "Preference Values",
+        data: preferenceValues,
+    });
 
     return {
-        normalizedMatrix: {
-            headers: criteria.map((_, index) => `C${index + 1}`),
-            data: normalizedMatrix
-        },
-        weightedNormalizedMatrix: {
-            headers: criteria.map((_, index) => `C${index + 1}`),
-            data: weightedMatrixResult
-        },
-        ideal,
-        negativeIdeal,
-        separationFromIdeal,
-        separationFromNegativeIdeal,
-        relativeCloseness,
-        finalRank
+        steps,
+        result: preferenceValues,
     };
-};
+}
+
+function normalizeWeights(weights) {
+    const sum = weights.reduce((a, b) => a + b, 0);
+    return weights.map((w) => w / sum);
+}
+
+function normalizeDecisionMatrix(values) {
+    const columnSums = values[0].map((_, colIndex) => {
+        return Math.sqrt(values.reduce((sum, row) => sum + Math.pow(row[colIndex], 2), 0));
+    });
+
+    return values.map(row => row.map((value, colIndex) => value / columnSums[colIndex]));
+}
+
+function applyWeights(normalizedDecisionMatrix, weights) {
+    return normalizedDecisionMatrix.map(row => row.map((value, index) => value * weights[index]));
+}
+
+function calculateIdealSolutions(weightedDecisionMatrix, types) {
+    const idealPositive = weightedDecisionMatrix[0].map((_, colIndex) => {
+        return types[colIndex] === "benefit"
+            ? Math.max(...weightedDecisionMatrix.map(row => row[colIndex]))
+            : Math.min(...weightedDecisionMatrix.map(row => row[colIndex]));
+    });
+
+    const idealNegative = weightedDecisionMatrix[0].map((_, colIndex) => {
+        return types[colIndex] === "benefit"
+            ? Math.min(...weightedDecisionMatrix.map(row => row[colIndex]))
+            : Math.max(...weightedDecisionMatrix.map(row => row[colIndex]));
+    });
+
+    return { idealPositive, idealNegative };
+}
+
+function calculateDistances(weightedDecisionMatrix, idealPositive, idealNegative) {
+    const distanceToPositive = weightedDecisionMatrix.map(row => {
+        return Math.sqrt(row.reduce((sum, value, index) => sum + Math.pow(value - idealPositive[index], 2), 0));
+    });
+
+    const distanceToNegative = weightedDecisionMatrix.map(row => {
+        return Math.sqrt(row.reduce((sum, value, index) => sum + Math.pow(value - idealNegative[index], 2), 0));
+    });
+
+    return { distanceToPositive, distanceToNegative };
+}
+
+function calculatePreferenceValues(distances) {
+    const { distanceToPositive, distanceToNegative } = distances;
+    return distanceToNegative.map((dNeg, index) => {
+        return dNeg / (dNeg + distanceToPositive[index]);
+    }).map((value, index) => ({ index: index + 1, value }))
+      .sort((a, b) => b.value - a.value) // Sort by preference value
+      .map((item, rank) => ({ ...item, rank: rank + 1 })); // Assign ranks
+}
