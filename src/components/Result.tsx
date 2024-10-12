@@ -76,10 +76,66 @@ const Result: React.FC<ResultProps> = ({ steps }) => {
             ])}
           />
         );
-      default:
-        return <div>No data available</div>;
-    }
-  };
+        case "Normalized Decision Matrix":
+          return (
+            <Table
+              headers={["Item", ...data[0].map((_: any, index: number) => `C${index + 1}`)]}
+              stepTitle={title} // Adding step title
+              data={data.map((row: any, rowIndex: number) => [
+                `A${rowIndex + 1}`, ...row.map((cell: any) => cell.toFixed(4))
+              ])}
+            />
+          );
+  
+        case "Weighted Decision Matrix":
+          return (
+            <Table
+              headers={["Item", ...data[0].map((_: any, index: number) => `C${index + 1}`)]}
+              stepTitle={title} // Adding step title
+              data={data.map((row: any, rowIndex: number) => [
+                `A${rowIndex + 1}`, ...row.map((cell: any) => cell.toFixed(4))
+              ])}
+            />
+          );
+  
+        case "Ideal Solutions":
+          return (
+            <Table
+              headers={["Solution Type", ...data.idealPositive.map((_: any, index: number) => `C${index + 1}`)]}
+              stepTitle={title} // Adding step title
+              data={[
+                ['Ideal Positive', ...data.idealPositive.map((val: number) => val.toFixed(4))],
+                ['Ideal Negative', ...data.idealNegative.map((val: number) => val.toFixed(4))]
+              ]}
+            />
+          );
+  
+        case "Distances to Ideal Solutions":
+          return (
+            <Table
+              headers={["Item", "Distance to Positive", "Distance to Negative"]}
+              stepTitle={title} // Adding step title
+              data={data.distanceToPositive.map((distance: number, index: number) => [
+                `A${index + 1}`, distance.toFixed(4), data.distanceToNegative[index].toFixed(4)
+              ])}
+            />
+          );
+  
+        case "Preference Values":
+          return (
+            <Table
+              headers={["Item", "Value", "Rank"]}
+              stepTitle={title} // Adding step title
+              data={data.map((item: any) => [
+                `A${item.index}`, item.value.toFixed(4), item.rank
+              ])}
+            />
+          );
+  
+        default:
+          return <div>No data available</div>;
+      }
+    };
 
   return (
     <div className="mt-4">
