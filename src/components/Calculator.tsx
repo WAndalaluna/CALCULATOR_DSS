@@ -1,13 +1,15 @@
 import React from 'react';
 import { calculateSAW } from '../utils/saw'; // Adjust the path as necessary
 import { calculateWP } from '../utils/wp'; // Import calculateWP function
+import { calculateTOPSIS } from '../utils/topsis';
+import { calculateAHP } from '../utils/ahp';
 import Result from './Result';
 
 interface CalculatorProps {
   tableData: number[][]; // Data tabel untuk alternatif
   weights: number[]; // Bobot untuk kriteria
   types: string[]; // Tipe untuk kriteria (benefit/cost)
-  method: 'SAW' | 'WP'; // Metode yang dipilih
+  method: 'saw' | 'wp'|'topsis'|'ahp'; // Metode yang dipilih
 }
 
 const Calculator: React.FC<CalculatorProps> = ({ tableData, weights, types, method }) => {
@@ -32,6 +34,9 @@ const Calculator: React.FC<CalculatorProps> = ({ tableData, weights, types, meth
         case 'wp':
           calculationResult = calculateWP(inputData); // Call the WP calculation function
           break;
+          case 'topsis':
+            calculationResult = calculateTOPSIS(inputData); // Call the WP calculation function
+            break;
         default:
           calculationResult = null;
           break;
