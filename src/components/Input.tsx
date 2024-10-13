@@ -381,20 +381,14 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
       </table>
 
 
-      <div className="flex justify mt-3">
-        <button
-          onClick={handleReset}
-          className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md focus:outline-none"
-        >
+      <div className="flex justify-between">
+        <button onClick={handleReset} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
           Reset
-        </button>
-        <button
-          onClick={handleCalculate}
-          className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md focus:outline-none"
-        >
-          Calculate
-        </button>
-      </div>
+          </button>
+          <button onClick={handleCalculate} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+            Calculate
+            </button>
+            </div>
     </div>
   );
 };

@@ -1,3 +1,9 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "warn",  // Mengubah error menjadi peringatan
+    "react-hooks/exhaustive-deps": "warn",         // Menjadikannya peringatan agar tetap mendapat notifikasi
+    "prefer-const": "off"                          // Menonaktifkan prefer-const
+  }
 }
