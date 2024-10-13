@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import Table from './Table'; // Import the Table component
+import {downloadResultsAsJSON, downloadResultsAsExcel} from '../utils/downloadUtils';
 
 interface ResultProps {
   steps: { title: string; data: any }[];
@@ -137,16 +138,30 @@ const Result: React.FC<ResultProps> = ({ steps }) => {
       }
     };
 
-  return (
-    <div className="mt-4">
-      <h2 className="text-xl font-bold mb-4">Calculation Steps</h2>
-      {steps.map((step, index) => (
-        <div key={index} className="mb-6">
-          {renderStepData(step.title, step.data)}
+    return (
+      <div className="mt-4">
+        <div className='container mx-auto px-5'>
+        <h2 className="text-xl font-bold mb-4">Calculation Steps</h2>
+        {steps.map((step, index) => (
+          <div key={index} className="mb-6">
+            {renderStepData(step.title, step.data)}
+          </div>
+        ))}
+        <button
+          onClick={() => downloadResultsAsJSON(steps)}
+          className="mt-4 px-4 py-2 bg-green-500 text-white rounded mr-2"
+        >
+          Download as JSON
+        </button>
+        <button 
+          onClick={() => downloadResultsAsExcel(steps)} 
+          className="mt-4 px-4 py-2 bg-green-500 text-white rounded mr-2"
+        >
+          Download as Excel
+        </button>
         </div>
-      ))}
-    </div>
-  );
+      </div>
+    );
 };
 
 export default Result;
