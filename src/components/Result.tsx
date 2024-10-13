@@ -1,7 +1,11 @@
 "use client";
 import React from 'react';
 import Table from './Table'; // Import the Table component
+<<<<<<< HEAD
 import { downloadResultsAsJSON, downloadResultsAsExcel } from '../utils/downloadUtils';
+=======
+import {downloadResultsAsJSON, downloadResultsAsExcel} from '../utils/downloadUtils';
+>>>>>>> 01d86c89c059ae2932bb451d262c19b18c8de380
 
 interface ResultProps {
   steps: { title: string; data: any }[];
