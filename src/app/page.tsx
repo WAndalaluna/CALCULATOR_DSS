@@ -1,16 +1,16 @@
-"use client"; // Pastikan ini ada di bagian paling atas
+"use client"; // Pastikan ini berada di atas
 import React, { useState } from 'react';
 import InputForm from '../components/Input'; // Komponen InputForm umum
-import AHPInputForm from '../components/AhpInput'; // Import AHPInputForm
+import AHPInputForm from '../components/AhpInput'; // Import komponen AHPInputForm
 import MethodSelection from '../components/MethodSelection';
 import Calculator from '../components/Calculator';
 
 const MainPage: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState<'saw' | 'wp' | 'topsis' | 'ahp'>('wp'); // Metode default
   const [weights, setWeights] = useState<number[]>([50, 50]); // Bobot default
-  const [types, setTypes] = useState<string[]>(['benefit', 'benefit']); // Tipe default
+  const [types, setTypes] = useState<string[]>(['benefit', 'benefit']); // Tipe default (benefit)
   const [tableData, setTableData] = useState<number[][]>([]); // Data tabel alternatif
-  const [shouldCalculate, setShouldCalculate] = useState(false); // State untuk pemicu perhitungan
+  const [shouldCalculate, setShouldCalculate] = useState(false); // Pemicu untuk kalkulasi
 
   // State untuk menyimpan perbandingan kriteria dan alternatif untuk AHP
   const [criteriaComparison, setCriteriaComparison] = useState<number[][] | undefined>(undefined);
@@ -19,8 +19,13 @@ const MainPage: React.FC = () => {
   // Fungsi untuk menangani pemilihan metode
   const handleMethodSelect = (method: 'saw' | 'wp' | 'topsis' | 'ahp') => {
     setSelectedMethod(method);
-    setTableData([]); // Reset data tabel saat metode berubah
-    setShouldCalculate(false); // Reset pemicu perhitungan saat metode berubah
+    resetData();
+  };
+
+  // Fungsi untuk mereset data
+  const resetData = () => {
+    setTableData([]); // Reset data tabel
+    setShouldCalculate(false); // Reset pemicu kalkulasi
     setCriteriaComparison(undefined); // Reset perbandingan kriteria
     setAlternativesComparison(undefined); // Reset perbandingan alternatif
   };
@@ -36,54 +41,56 @@ const MainPage: React.FC = () => {
     setWeights(data.weights);
     setTypes(data.types);
     setTableData(data.values);
-    setShouldCalculate(true); // Set pemicu perhitungan ke true
+    setShouldCalculate(true); // Pemicu kalkulasi
   };
 
   // Fungsi untuk menangani pengiriman data dari AHPInputForm
   const handleAHPFormSubmit = (data: {
-    criteria: number[][]; // Tipe kriteria yang benar
-    alternatives: number[][][]; // Tipe alternatif yang benar
+    criteria: number[]; // Tipe kriteria valid
+    alternatives: number[]; // Tipe alternatif valid
     criteriaComparison: number[][]; // Matriks perbandingan kriteria
     alternativesComparison: number[][][]; // Matriks perbandingan alternatif
   }) => {
     setWeights(Array(data.alternatives.length).fill(1)); // Bobot awal
-    setTypes(Array(data.alternatives.length).fill('benefit')); // Asumsi semua alternatif adalah 'benefit'
-  
-    // Set tableData dengan data alternatif
-    setTableData(data.alternatives[0]); // Ambil alternatif dari index pertama untuk ditampilkan
+    setTypes(Array(data.alternatives.length).fill('benefit')); // Anggap semua alternatif adalah 'benefit'
+    setTableData([data.alternatives]); // Simpan alternatif
     setCriteriaComparison(data.criteriaComparison); // Set perbandingan kriteria
     setAlternativesComparison(data.alternativesComparison); // Set perbandingan alternatif
-    setShouldCalculate(true); // Set pemicu perhitungan ke true
+    setShouldCalculate(true); // Pemicu kalkulasi
   };
 
-  // Fungsi untuk mereset semua input
+  // Fungsi untuk mereset input, menjaga state AHP
   const handleReset = () => {
-    setWeights([50, 50]); // Reset bobot ke nilai default
-    setTypes(['benefit', 'benefit']); // Reset tipe ke nilai default
-    setTableData([]); // Reset data tabel
-    setShouldCalculate(false); // Reset pemicu perhitungan
-    setCriteriaComparison(undefined); // Reset perbandingan kriteria
-    setAlternativesComparison(undefined); // Reset perbandingan alternatif
+    console.log("Mereset input..."); // Log untuk debugging
+    if (selectedMethod === 'ahp') {
+      console.log("Mereset perbandingan AHP..."); // Log untuk debugging
+      setCriteriaComparison(undefined); // Reset perbandingan kriteria
+      setAlternativesComparison(undefined); // Reset perbandingan alternatif
+    } else {
+      console.log("Mereset input lainnya..."); // Log untuk debugging
+      setWeights([50, 50]); // Reset bobot ke default
+      setTypes(['benefit', 'benefit']); // Reset tipe ke default
+      setTableData([]); // Reset data tabel
+    }
+    setShouldCalculate(false); // Reset pemicu kalkulasi
   };
 
   return (
-    <div className="container mx-auto p-4">
-      {/* Kotak untuk Judul */}
-      <div className="border p-4 rounded-lg shadow-lg mb-4 text-center bg-gray-500 text-white">
-        <h1 className="text-2xl font-bold px-4 py-2">Kalkulator Pengambil Keputusan Multikriteria</h1>
-      </div>
-  
-      {/* Komponen Pemilihan Metode */}
-      <MethodSelection onSelectMethod={handleMethodSelect} selectedMethod={selectedMethod} />
-  
+    <div className="w-full min-h-screen bg-background">
+      {/* Komponen Method Selection dengan judul "Choose Method" yang diformat hitam dan bold */}
+      <MethodSelection 
+        onSelectMethod={handleMethodSelect} 
+        selectedMethod={selectedMethod}
+      />
+
       {/* Render InputForm atau AHPInputForm berdasarkan metode yang dipilih */}
       {selectedMethod === 'ahp' ? (
-        <AHPInputForm onCalculate={handleAHPFormSubmit} />
+        <AHPInputForm onCalculate={handleAHPFormSubmit} onReset={handleReset} />
       ) : (
         <InputForm onCalculate={handleFormSubmit} onReset={handleReset} method={selectedMethod} />
       )}
-  
-      {/* Render Komponen Calculator jika data tabel valid dan pemicu perhitungan true */}
+
+      {/* Render komponen Calculator jika data tabel valid dan pemicu kalkulasi aktif */}
       {shouldCalculate && tableData.length > 0 && tableData[0].length > 0 && (
         <Calculator 
           tableData={tableData} 
@@ -96,7 +103,6 @@ const MainPage: React.FC = () => {
       )}
     </div>
   );
-  
 };
 
 export default MainPage;
