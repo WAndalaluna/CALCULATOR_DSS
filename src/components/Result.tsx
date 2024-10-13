@@ -1,7 +1,6 @@
 "use client";
 import React from 'react';
 import Table from './Table'; // Import the Table component
-import {downloadResultsAsJSON, downloadResultsAsExcel} from '../utils/downloadUtils';
 
 interface ResultProps {
   steps: { title: string; data: any }[];
@@ -146,19 +145,6 @@ const Result: React.FC<ResultProps> = ({ steps }) => {
           {renderStepData(step.title, step.data)}
         </div>
       ))}
-      {/* untuk download hasil perhitungan*/}
-      <button
-        onClick={() => downloadResultsAsJSON(steps)}
-        className="mt-4 px-4 py-2 bg-green-500 text-white rounded mr-2"
-      >
-        Download as JSON
-      </button>
-      <button 
-        onClick={() => downloadResultsAsExcel(steps)} 
-        className="mt-4 px-4 py-2 bg-green-500 text-white rounded mr-2"
-      >
-        Download as Excel
-      </button>
     </div>
   );
 };

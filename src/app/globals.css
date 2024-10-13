@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #ffeb3b; /* Warna latar belakang kuning cerah */
+  --foreground: #2196f3; /* Warna teks biru cerah */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffc107; /* Warna latar belakang kuning lebih gelap untuk mode gelap */
+    --foreground: #0d47a1; /* Warna teks biru lebih gelap untuk kontras di mode gelap */
   }
 }
 

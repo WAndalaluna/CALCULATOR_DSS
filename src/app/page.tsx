@@ -68,18 +68,21 @@ const MainPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Decision Support System (DSS)</h1>
-
+      {/* Kotak untuk Judul */}
+      <div className="border p-4 rounded-lg shadow-lg mb-4 text-center bg-gray-500 text-white">
+        <h1 className="text-2xl font-bold px-4 py-2">Kalkulator Pengambil Keputusan Multikriteria</h1>
+      </div>
+  
       {/* Komponen Pemilihan Metode */}
       <MethodSelection onSelectMethod={handleMethodSelect} selectedMethod={selectedMethod} />
-
+  
       {/* Render InputForm atau AHPInputForm berdasarkan metode yang dipilih */}
       {selectedMethod === 'ahp' ? (
         <AHPInputForm onCalculate={handleAHPFormSubmit} />
       ) : (
         <InputForm onCalculate={handleFormSubmit} onReset={handleReset} method={selectedMethod} />
       )}
-
+  
       {/* Render Komponen Calculator jika data tabel valid dan pemicu perhitungan true */}
       {shouldCalculate && tableData.length > 0 && tableData[0].length > 0 && (
         <Calculator 
@@ -91,16 +94,9 @@ const MainPage: React.FC = () => {
           alternativesComparison={alternativesComparison} 
         />
       )}
-
-      {/* Tampilkan data tabel input untuk debugging atau hasil sementara */}
-      {tableData.length > 0 && tableData[0].length > 0 && (
-        <div className="mt-4">
-          <h2 className="text-xl font-bold">Data yang Diinput</h2>
-          <pre>{JSON.stringify(tableData, null, 2)}</pre>
-        </div>
-      )}
     </div>
   );
+  
 };
 
 export default MainPage;

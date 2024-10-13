@@ -26,7 +26,7 @@ const AHPInputForm: React.FC<AHPInputFormProps> = ({ onCalculate }) => {
     { value: 8, label: "Sedikit sangat mutlak penting" },
     { value: 9, label: "Penting yang mutlak" },
   ];
-
+  
   useEffect(() => {
     generateCriteriaComparison();
     generateAlternativesComparison();
@@ -86,7 +86,7 @@ const AHPInputForm: React.FC<AHPInputFormProps> = ({ onCalculate }) => {
     <div className="space-y-4 flex flex-col">
       {/* Criteria */}
       <div>
-        <h2 className="text-lg font-semibold">Criteria</h2>
+        <h2 className="text-lg font-semibold">Kriteria</h2>
         <div className="flex items-center space-x-4">
           <button
             onClick={() => setNumCriteria(Math.max(2, numCriteria - 1))}
@@ -106,7 +106,7 @@ const AHPInputForm: React.FC<AHPInputFormProps> = ({ onCalculate }) => {
 
       {/* Alternatives */}
       <div>
-        <h2 className="text-lg font-semibold">Alternatives</h2>
+        <h2 className="text-lg font-semibold">Alternatif</h2>
         <div className="flex items-center space-x-4">
           <button
             onClick={() => setNumAlternatives(Math.max(2, numAlternatives - 1))}
@@ -126,11 +126,11 @@ const AHPInputForm: React.FC<AHPInputFormProps> = ({ onCalculate }) => {
 
       {/* Pairwise Comparison Table for Criteria */}
       <div>
-        <h2 className="text-lg font-semibold">Pairwise Comparison for Criteria</h2>
+        <h2 className="text-lg font-semibold">Komparasi Pairwise Untuk Kriteria</h2>
         <table className="min-w-full text-sm text-gray-900 dark:text-gray-100 text-center divide-x divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 uppercase tracking-wide text-xs">
             <tr>
-              <th className="px-4 py-2">Criteria</th>
+              <th className="px-4 py-2">Kriteria</th>
               {Array.from({ length: numCriteria }, (_, index) => (
                 <th key={index} className="px-4 py-2">{`C${index + 1}`}</th>
               ))}
@@ -139,9 +139,9 @@ const AHPInputForm: React.FC<AHPInputFormProps> = ({ onCalculate }) => {
           <tbody>
             {criteriaComparison.map((row, rowIndex) => (
               <tr key={rowIndex}>
-                <td className="px-4 py-2">{`C${rowIndex + 1}`}</td>
+                <td className="px-4 py-2 bg-gray-200">{`C${rowIndex + 1}`}</td>
                 {row.map((cell, colIndex) => (
-                  <td key={colIndex} className="px-4 py-2">
+                  <td key={colIndex} className="px-4 py-2 bg-gray-200">
                     {rowIndex < colIndex ? (
                       <select
                         value={criteriaComparison[rowIndex][colIndex]}
@@ -167,14 +167,14 @@ const AHPInputForm: React.FC<AHPInputFormProps> = ({ onCalculate }) => {
 
       {/* Pairwise Comparison Table for Alternatives */}
       <div>
-        <h2 className="text-lg font-semibold">Pairwise Comparison for Alternatives</h2>
+        <h2 className="text-lg font-semibold">Komparasi Pairwise Untuk Alternatif</h2>
         {Array.from({ length: numCriteria }, (_, criterionIndex) => (
           <div key={criterionIndex} className="mt-4">
-            <h3 className="text-md font-semibold">{`Criterion C${criterionIndex + 1}`}</h3>
+            <h3 className="text-md font-semibold">{`Kriteria C${criterionIndex + 1}`}</h3>
             <table className="min-w-full text-sm text-gray-900 dark:text-gray-100 text-center divide-x divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 uppercase tracking-wide text-xs">
                 <tr>
-                  <th className="px-4 py-2">Alternatives</th>
+                  <th className="px-4 py-2">Alternatif</th>
                   {Array.from({ length: numAlternatives }, (_, index) => (
                     <th key={index} className="px-4 py-2">{`A${index + 1}`}</th>
                   ))}
@@ -183,9 +183,9 @@ const AHPInputForm: React.FC<AHPInputFormProps> = ({ onCalculate }) => {
               <tbody>
                 {alternativesComparison[criterionIndex]?.map((row, rowIndex) => (
                   <tr key={rowIndex}>
-                    <td className="px-4 py-2">{`A${rowIndex + 1}`}</td>
+                    <td className="px-4 py-2 bg-gray-200">{`A${rowIndex + 1}`}</td>
                     {row.map((cell, colIndex) => (
-                      <td key={colIndex} className="px-4 py-2">
+                      <td key={colIndex} className="px-4 py-2 bg-gray-200">
                         {rowIndex < colIndex ? (
                           <select
                             value={alternativesComparison[criterionIndex][rowIndex][colIndex]}
@@ -210,17 +210,16 @@ const AHPInputForm: React.FC<AHPInputFormProps> = ({ onCalculate }) => {
           </div>
         ))}
       </div>
-
+      
       <div className="flex justify-between">
-        <button onClick={handleReset} className="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded">
-          Reset
-        </button>
-        <button onClick={handleCalculate} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
-          Calculate
-        </button>
-      </div>
-    </div>
-  );
-};
-
-export default AHPInputForm;
+        <button onClick={handleReset} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
+          Hapus
+          </button>
+          <button onClick={handleCalculate} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+            Hitung
+            </button>
+            </div>
+            </div>
+            );
+          };
+          export default AHPInputForm;

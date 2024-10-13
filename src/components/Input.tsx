@@ -16,8 +16,6 @@ interface InputFormProps {
   onAHPDataChange?: (data: number[][]) => void;
 }
 
-
-
 const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) => {
   const [rows, setRows] = useState(2);
   const [cols, setCols] = useState(2);
@@ -204,15 +202,15 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
       <table className="max-w-20">
         <tbody>
           <tr>
-            <td className="text-left pr-2">Rows</td>
+            <td className="text-left pr-2">Baris</td>
             <td className="pr-2">:</td>
             <td className="flex items-center space-x-4">
               <button
                 onClick={decrementRows}
                 disabled={rows <= 2}
                 className={`px-2 py-1 rounded ${rows <= 2
-                    ? "bg-gray-200 dark:bg-gray-700"
-                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                    ? "bg-gray-300 dark:bg-gray-700"
+                    : "bg-gray-700 hover:bg-gray-800 text-white"
                   }`}
               >
                 -
@@ -222,8 +220,8 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
                 onClick={incrementRows}
                 disabled={rows >= 15}
                 className={`px-2 py-1 rounded ${rows >= 15
-                    ? "bg-gray-200 dark:bg-gray-700"
-                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                    ? "bg-gray-300 dark:bg-gray-700"
+                    : "bg-gray-700 hover:bg-gray-800 text-white"
                   }`}
               >
                 +
@@ -231,15 +229,15 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
             </td>
           </tr>
           <tr>
-            <td className="text-left pr-2">Columns</td>
+            <td className="text-left pr-2">Kolom</td>
             <td className="pr-2">:</td>
             <td className="flex items-center space-x-4">
               <button
                 onClick={decrementCols}
                 disabled={cols <= 2}
                 className={`px-2 py-1 rounded ${cols <= 2
-                    ? "bg-gray-200 dark:bg-gray-700"
-                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                    ? "bg-gray-300 dark:bg-gray-700"
+                    : "bg-gray-700 hover:bg-gray-800 text-white"
                   }`}
               >
                 -
@@ -249,8 +247,8 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
                 onClick={incrementCols}
                 disabled={cols >= 15}
                 className={`px-2 py-1 rounded ${cols >= 10
-                    ? "bg-gray-200 dark:bg-gray-700"
-                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                    ? "bg-gray-300 dark:bg-gray-700"
+                    : "bg-gray-700 hover:bg-gray-800 text-white"
                   }`}
               >
                 +
@@ -266,7 +264,7 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
           <tr>
             {/* Header for the "Criteria", "Type", and "Weight" */}
             <th className="px-7 py-3 whitespace-nowrap border-r border-gray-200 dark:border-gray-700">
-              Criteria
+              Kriteria
             </th>
             {Array(types.length)
               .fill(0)
@@ -284,7 +282,7 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
           {/* Row for Type selection */}
           <tr className="bg-gray-50 dark:bg-gray-700 divide-x divide-gray-200 dark:divide-gray-700">
             <td className="px-7 py-3 whitespace-nowrap font-medium text-gray-800 dark:text-gray-200">
-              Type
+              Tipe
             </td>
             {types.map((type, index) => (
               <td key={index} className="px-6 py-3">
@@ -293,8 +291,8 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
                   onChange={(e) => handleTypeChange(e, index)}
                   className="block w-full text-center bg-gray-100 dark:bg-gray-700 focus:outline-none"
                 >
-                  <option value="benefit">Benefit</option>
-                  <option value="cost">Cost</option>
+                  <option value="benefit">Keuntungan</option>
+                  <option value="cost">Biaya</option>
                 </select>
               </td>
             ))}
@@ -303,7 +301,7 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
           {/* Row for Weight inputs */}
           <tr className="bg-gray-50 dark:bg-gray-700 divide-x divide-gray-200 dark:divide-gray-700">
             <td className="px-7 py-3 whitespace-nowrap font-medium text-gray-800 dark:text-gray-200">
-              Weight
+              Bobot
             </td>
             {weights.map((weight, index) => (
               <td key={index} className="px-6 py-3">
@@ -338,7 +336,7 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
               colSpan={cols}
               className="px-6 py-3 border-r border-gray-200 dark:border-gray-700"
             >
-              Criteria
+              Kriteria
             </th>
           </tr>
           <tr>
@@ -383,13 +381,13 @@ const InputForm: React.FC<InputFormProps> = ({ onCalculate, onReset, method }) =
 
       <div className="flex justify-between">
         <button onClick={handleReset} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
-          Reset
+          Hapus
           </button>
           <button onClick={handleCalculate} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
-            Calculate
+            Hitung
             </button>
             </div>
-    </div>
+            </div>
   );
 };
 
